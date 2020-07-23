@@ -5,67 +5,58 @@ import * as yup from 'yup'
 import formSchema from './component/formSchema'
 import Name from './component/Name'
 import './App.css';
-
 const initialFormValues = {
-  Name: '',
-  Email: '',
-  Password: '',
-  TOS: false,
-
+  name: '',
+  email: '',
+  password: '',
+  tos: false,
 }
 const intialFormError = {
-  Name: '',
-  Email: '',
-  Password: '',
-  TOS: '',
+  name: '',
+  email: '',
+  password: '',
+  tos: null,
 }
-
 const initialForm = []
 const initialDisabled = true
-
-
 function App() {
   // array of form objects
   const [data, setData] = useState(initialForm)
+  // console.log(data, 'asdfasdf')
   const [formValues, setFormValues] = useState(initialFormValues)
   const [formErrors, setFormErrors] = useState(intialFormError)
   const [disabled, setDisabled] = useState(initialDisabled)
-
-
   useEffect(() => {
-
     const getForm = () => {
       axios.get('https://reqres.in/api/users')
         .then(res => {
           // console.log(res)
           setData(res.data.data)
-          console.log(res.data.data, 'Wrong?')
+          // console.log(res.data.data, 'Wrong?')
         })
         .catch(err => {
           debugger
         })
     }
-
     getForm()
-
   }, [])
   // getForm()
-
-
   const postNewForm = newForm => {
     axios.post('https://reqres.in/api/users', newForm)
       .then(res => {
-        console.log('post', res)
-        setData([res.data, ...data])
+        // console.log('postaassdasdasdasdasd', res) /************************/
+        setData([...data, res.data])
         setFormValues(initialFormValues)
+        console.log(formValues, 'not working 2.0')
+        // setFormValues({Name: "", Email: "", Password: "", TOS: false})
       })
       .catch(err => {
+        setFormValues(initialFormValues)
+
         debugger
       })
   }
-
   const inputChange = (name, value) => {
-      
     yup
       .reach(formSchema, name)
       //we can then run validate using the value
@@ -85,43 +76,34 @@ function App() {
           [name]: err.errors[0],
         })
       })
-
     setFormValues({
       ...formValues,
       [name]: value // NOT AN ARRAY
     })
-    console.log('test =>', name, value)
+    // console.log('test =>', name, value)
   }
-
-
   const checkboxChange = (name, isChecked) => {
-    console.log('ook ook', name)
-    setFormValues({...formValues, [name]: isChecked})
+    // console.log('ook ook', name)
+    setFormValues({ ...formValues, [name]: isChecked })
   }
-
-
   const submit = () => {
     const newForm = {
-      Name: formValues.name.trim(),
-      Email: formValues.Email.trim(),
-      Password: formValues.Password.trim(),
-      
+      name: formValues.name.trim(),
+      email: formValues.email,
+      password: formValues.password,
+      tos: formValues.tos
     }
-    postNewForm(newForm)
+    postNewForm(newForm);
   }
-
-
   useEffect(() => {
     formSchema.isValid(formValues).then(valid => {
       setDisabled(!valid)
     })
   }, [formValues])
-  
   return (
     <div className="App">
       <header><h1>Something Something Ooga</h1></header>
-
-      <Form 
+      <Form
         values={formValues}
         inputChange={inputChange}
         checkboxChange={checkboxChange}
@@ -129,7 +111,6 @@ function App() {
         disabled={disabled}
         errors={formErrors}
       />
-
       {
         data.map(data => {
           return (
@@ -140,5 +121,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

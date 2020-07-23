@@ -1,5 +1,4 @@
 import React from 'react'
-
 export default function Form(props) {
     const {
         values,
@@ -10,7 +9,7 @@ export default function Form(props) {
         errors,
     } = props 
 
-    console.log(values, 'moo')
+    // console.log(values, 'moo')
     const onSubmit = evt => {
         evt.preventDefault()
         submit()
@@ -27,12 +26,13 @@ export default function Form(props) {
 
     const onInputChange = evt => {
         const name = evt.target.name
-        console.log('wooga wooga', name)
         const value = evt.target.value
+        // console.log('wooga wooga', value)
         inputChange(name, value)
     }
-
+    
     return (
+        
         <form className='form container' onSubmit={onSubmit}>
         <div>
             <h2>Input Form</h2>
@@ -40,9 +40,9 @@ export default function Form(props) {
             <button disabled={disabled}>Submit</button>
 
             <div className='errors'>
-                <div>{errors.name}</div>
-                <div>{errors.email}</div>
-                <div>{errors.password}</div>
+                <div>{errors.Name}</div>
+                <div>{errors.Email}</div>
+                <div>{errors.Password}</div>
                 <div>{errors.TOS}</div>
             </div>
         </div>
@@ -80,8 +80,8 @@ export default function Form(props) {
             <label>TOS
                 <input 
                 type='checkbox'
-                name='TOS'
-                checked={values.TOS === true}
+                name='tos'
+                checked={values.tos === true}
                 onChange={onCheckboxChange}
                 />
             </label>
